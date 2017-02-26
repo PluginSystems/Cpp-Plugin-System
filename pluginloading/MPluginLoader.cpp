@@ -6,6 +6,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <fstream>
 #include "IPlugin.h"
 #include "../TestPlugin.cpp"
 #include "../files/UniFileReader.h"
@@ -16,7 +17,7 @@ class MPluginLoader{
 
 private:
     string filePath;
-    UniFileReader *reader;
+    UniFileReader* reader;
 
 protected:
     vector<std::shared_ptr<IPlugin>> pluginFiles;
@@ -35,25 +36,39 @@ public:
 
     void load(std::function<void(vector<std::shared_ptr<IPlugin>>)> callback) {
 
-        vector<string> files = vector<string>();
-
-        reader->readDir(filePath,&files);
+        vector<string> files = reader->readDir(filePath);
 
         std::cout << files.size() << endl;
 
-        for(string f : files){
-            cout << f << endl;
+
+
+        vector<fstream*> loadedFiles = reader->loadFiles(files);
+
+
+
+        for(fstream* stream : loadedFiles){
+
+            string line;
+
+            if(stream->is_open()){
+
+               while (!stream->eof()){
+                   *stream >> line;
+                   cout << line << endl;
+
+               }
+
+            }
         }
-
-
+        
         pluginFiles = vector<std::shared_ptr<IPlugin>>();
 
         string ms = "Hey";
 
-        for (int i = 0; i < 30; ++i) {
-
+        /*for (int i = 0; i < 30; ++i) {
             pluginFiles.push_back(std::make_shared<TestPlugin>(ms));
         }
+         */
 
 
 

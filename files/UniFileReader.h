@@ -12,7 +12,9 @@
 class UniFileReader {
 
 public:
-    virtual int readDir(const std::string path, std::vector<std::string> *files)= 0;
+    virtual std::vector<std::string> readDir(const std::string path)= 0;
+
+    virtual std::vector<std::fstream*> loadFiles(const std::vector<std::string> files)=0;
 };
 
 
