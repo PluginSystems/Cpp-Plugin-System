@@ -3,15 +3,3 @@
 //
 
 #include "IPlugin.h"
-
-IPlugin::IPlugin(const std::string name) {
-
-}
-
-void IPlugin::onDisable() {
-
-}
-
-void IPlugin::onEnable() {
-
-}

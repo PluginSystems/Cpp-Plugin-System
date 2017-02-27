@@ -26,7 +26,6 @@ std::vector<IPlugin*> ysl::PluginLoader::load() {
 
     std::vector<std::fstream *> loadedFiles = reader->loadFiles(files);
 
-    delete(pluginFiles);
     pluginFiles = std::vector<IPlugin*>();
 
 

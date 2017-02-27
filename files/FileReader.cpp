@@ -4,14 +4,11 @@
 
 #ifdef WIN32
 #include <windows.h>
-#else
-
-#include <dirent.h>
-
 #endif
 
 #include <fstream>
 #include <iostream>
+#include <dirent.h>
 #include "FileReader.h"
 
 namespace ysl {
