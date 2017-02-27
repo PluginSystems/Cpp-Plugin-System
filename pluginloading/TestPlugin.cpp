@@ -3,10 +3,11 @@
 //
 
 
-#include <iostream>
-#include "pluginloading/IPlugin.h"
 
-class TestPlugin : public IPlugin{
+#include <iostream>
+#include "plugin/IPlugin.h"
+
+class TestPlugin : public virtual IPlugin{
 public:
     TestPlugin(const std::string &name) : IPlugin(name) {
     }

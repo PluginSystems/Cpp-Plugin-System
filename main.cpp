@@ -1,30 +1,21 @@
 #include <iostream>
 #include <vector>
-#include "pluginloading/IPlugin.h"
-#include "pluginloading/MPluginLoader.cpp"
-#include "files/FileReader.h"
+#include "pluginloading/plugin/IPlugin.h"
+#include "pluginloading/PluginLoader.h"
 
-
-void callback(std::vector<std::shared_ptr<IPlugin>> plugins){
-
-    cout << plugins.size() << endl;
-
-    for(shared_ptr<IPlugin> plugin : plugins){
-        cout << "Plugin "<< plugin->getName() << endl;
-    }
-}
-
-
-void callMeBack(std::string message){
-    cout << "the message is: "<< message << endl;
-}
 
 int main() {
 
-    MPluginLoader loader(".", new ysl::FileReader());
+    ysl::PluginLoader loader(".", new ysl::FileReader());
 
 
-    loader.load(callback);
+    std::vector<IPlugin*> plugins = loader.load();
+
+    std::cout << "Plugins loaded: " <<plugins.size() << std::endl;
+
+    for(IPlugin *plugin : plugins){
+        std::cout << "Plugin "<< plugin->getName() << std::endl;
+    }
 
 
     return 0;

@@ -8,12 +8,12 @@
 
 #include <string>
 #include <map>
-#include "pluginloading/IPlugin.h"
+#include "plugin/IPlugin.h"
 
 class PluginManager {
 
 protected:
-    std::map<std::string,IPlugin> plugins;
+    std::map<std::string,IPlugin*> plugins;
 
 public:
 

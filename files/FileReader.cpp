@@ -54,9 +54,6 @@ namespace ysl {
 
         FindClose(dir);
 
-
-
-
 #else
 
         DIR *dp;
