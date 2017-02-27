@@ -8,7 +8,7 @@
 
 #include <string>
 #include <map>
-#include "plugin/IPlugin.h"
+#include "plugins/IPlugin.h"
 
 class PluginManager {
 

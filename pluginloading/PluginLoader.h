@@ -8,31 +8,30 @@
 
 #include <vector>
 #include <string>
-#include "plugin/IPlugin.h"
+#include "plugins/IPlugin.h"
 #include "../files/FileReader.h"
 
 
-namespace ysl{
+namespace ysl {
 
-    class PluginLoader{
+    class PluginLoader {
 
     protected:
         std::string filePath;
         ysl::FileReader *reader;
-        std::vector<IPlugin*> pluginFiles;
+        std::vector<IPlugin *> *pluginFiles;
 
 
     public:
         PluginLoader(std::string filePath, ysl::FileReader *reader);
 
-        std::vector<IPlugin*> load();
+        std::vector<IPlugin *>* load();
 
         std::string getFilePath();
     };
 
 
 };
-
 
 
 #endif //CPP_PLUGINTEST_PLUGINLOADER_H

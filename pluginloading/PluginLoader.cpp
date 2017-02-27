@@ -5,12 +5,13 @@
 #include <iostream>
 #include <fstream>
 #include "PluginLoader.h"
-#include "plugin/IPlugin.h"
+#include "plugins/TestPlugin.cpp"
 
 
 ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader) {
     this->filePath = filePath;
     this->reader = reader;
+    this->pluginFiles;
 
 }
 
@@ -19,26 +20,25 @@ std::string ysl::PluginLoader::getFilePath() {
 }
 
 
-std::vector<IPlugin*> ysl::PluginLoader::load() {
+std::vector<IPlugin *>* ysl::PluginLoader::load() {
     std::vector<std::string> files = reader->readDir(filePath);
 
-    std::cout << "Files available: " <<files.size() << std::endl;
+    std::cout << "Files available: " << files.size() << std::endl;
 
-    for(std::string name : files){
+    for (std::string name : files) {
         std::cout << name << std::endl;
     }
 
     std::vector<std::fstream *> loadedFiles = reader->loadFiles(files);
 
-    pluginFiles = std::vector<IPlugin*>();
+    unsigned long long int size = 20;
+
+    pluginFiles = new std::vector<IPlugin *>();
 
 
-   /* for (int i = 0; i < 20; ++i) {
-        pluginFiles[i]= new TestPlugin("");
-    }*/
-
-
-
+    for (int i = 0; i < size; ++i) {
+        pluginFiles->insert(pluginFiles->begin()+i,new TestPlugin("Hey" + std::to_string(i)));
+    }
 
 /**
  * load files and parse
