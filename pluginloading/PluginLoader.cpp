@@ -24,6 +24,10 @@ std::vector<IPlugin*> ysl::PluginLoader::load() {
 
     std::cout << "Files available: " <<files.size() << std::endl;
 
+    for(std::string name : files){
+        std::cout << name << std::endl;
+    }
+
     std::vector<std::fstream *> loadedFiles = reader->loadFiles(files);
 
     pluginFiles = std::vector<IPlugin*>();
