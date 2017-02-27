@@ -2,7 +2,7 @@
 #include <vector>
 #include "pluginloading/IPlugin.h"
 #include "pluginloading/MPluginLoader.cpp"
-#include "files/UnixFileReader.cpp"
+#include "files/FileReader.h"
 
 
 void callback(std::vector<std::shared_ptr<IPlugin>> plugins){
@@ -21,7 +21,7 @@ void callMeBack(std::string message){
 
 int main() {
 
-    MPluginLoader loader(".", new UnixFileReader());
+    MPluginLoader loader(".", new ysl::FileReader());
 
 
     loader.load(callback);

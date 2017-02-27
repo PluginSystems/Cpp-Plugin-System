@@ -8,8 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include "IPlugin.h"
-#include "../TestPlugin.cpp"
-#include "../files/UniFileReader.h"
+#include "../files/FileReader.h"
 
 using namespace std;
 
@@ -17,14 +16,14 @@ class MPluginLoader{
 
 private:
     string filePath;
-    UniFileReader* reader;
+    ysl::FileReader* reader;
 
 protected:
     vector<std::shared_ptr<IPlugin>> pluginFiles;
 
 
 public:
-    MPluginLoader(string filePath,UniFileReader *reader) {
+    MPluginLoader(string filePath,ysl::FileReader *reader) {
         this->filePath=filePath;
         this->reader = reader;
     }
@@ -45,7 +44,6 @@ public:
         vector<fstream*> loadedFiles = reader->loadFiles(files);
 
 
-
         for(fstream* stream : loadedFiles){
 
             string line;
@@ -60,7 +58,7 @@ public:
 
             }
         }
-        
+
         pluginFiles = vector<std::shared_ptr<IPlugin>>();
 
         string ms = "Hey";
