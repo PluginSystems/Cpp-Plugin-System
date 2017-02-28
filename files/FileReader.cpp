@@ -2,9 +2,10 @@
 // Created by yannick lamprecht on 24.02.17.
 //
 
-#ifdef _WIN32
+#if _WIN32
 
 #include <windows.h>
+#include <c++/cstring>
 
 #else
 #include <dirent.h>
@@ -12,7 +13,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <c++/cstring>
+
 #include <sys/stat.h>
 #include "FileReader.h"
 
@@ -36,7 +37,7 @@ namespace ysl {
 
         std::vector<std::string> filenames;
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 
         HANDLE dir;
         WIN32_FIND_DATA file_data;
