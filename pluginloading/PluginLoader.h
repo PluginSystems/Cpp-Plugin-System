@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "plugins/IPlugin.h"
 #include "../files/FileReader.h"
 
@@ -19,13 +20,13 @@ namespace ysl {
     protected:
         std::string filePath;
         ysl::FileReader *reader;
-        std::vector<IPlugin *> *pluginFiles;
+        std::vector<std::shared_ptr<IPlugin>> *pluginFiles;
 
 
     public:
         PluginLoader(std::string filePath, ysl::FileReader *reader);
 
-        std::vector<IPlugin *>* load();
+        std::vector<std::shared_ptr<IPlugin>> load();
 
         std::string getFilePath();
     };

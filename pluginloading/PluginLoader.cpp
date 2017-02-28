@@ -21,7 +21,7 @@ std::string ysl::PluginLoader::getFilePath() {
 }
 
 
-std::vector<IPlugin *>* ysl::PluginLoader::load() {
+std::vector<std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
     std::vector<std::string> files = reader->readDir(filePath);
 
     std::cout << "Files available: " << files.size() << std::endl;
@@ -34,11 +34,11 @@ std::vector<IPlugin *>* ysl::PluginLoader::load() {
 
     unsigned long long int size = 20;
 
-    pluginFiles = new std::vector<IPlugin *>();
+    pluginFiles = new std::vector<std::shared_ptr<IPlugin>>();
 
 
     for (int i = 0; i < size; ++i) {
-        pluginFiles->insert(pluginFiles->begin()+i,new TestPlugin("Hey" + std::to_string(i)));
+        pluginFiles->insert(pluginFiles->begin()+i,std::shared_ptr<IPlugin>(new TestPlugin("Hey" + std::to_string(i))));
     }
 
 /**
@@ -46,5 +46,5 @@ std::vector<IPlugin *>* ysl::PluginLoader::load() {
  */
 
 
-    return pluginFiles;
+    return *pluginFiles;
 }
