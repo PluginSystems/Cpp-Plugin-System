@@ -12,7 +12,7 @@ int main() {
 
     std::cout << "Plugins loaded: " << plugins.size() << std::endl;
 
-    for(std::shared_ptr<IPlugin> & plugin:plugins){
+    for(std::shared_ptr<IPlugin> & plugin : plugins){
 
         plugin->onEnable();
         std::cout << plugin.use_count() << std::endl;

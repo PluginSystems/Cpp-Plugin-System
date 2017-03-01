@@ -7,13 +7,12 @@
 #include <fstream>
 #include "PluginLoader.h"
 #include "plugins/TestPlugin.cpp"
+#include "../StreamPrinter.h"
 
 
 ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader) {
     this->filePath = filePath;
     this->reader = reader;
-    this->pluginFiles;
-
 }
 
 std::string ysl::PluginLoader::getFilePath() {
@@ -22,7 +21,8 @@ std::string ysl::PluginLoader::getFilePath() {
 
 
 std::vector<std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
-    std::vector<std::string> files = reader->readDir(filePath);
+    const std::string endings[] = {"txt"};// "so","dll"
+    std::vector<std::string> files = reader->readDir(filePath,endings);
 
     std::cout << "Files available: " << files.size() << std::endl;
 
@@ -30,7 +30,10 @@ std::vector<std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
         std::cout << name << std::endl;
     }
 
-    std::vector<std::fstream *> loadedFiles = reader->loadFiles(files);
+    std::vector<std::fstream *> loadedFiles = reader->loadFilesFromPath(filePath,endings);
+
+    StreamPrinter printer = StreamPrinter(loadedFiles);
+    printer.printFiles();
 
     unsigned long long int size = 20;
 
@@ -38,7 +41,7 @@ std::vector<std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
 
 
     for (int i = 0; i < size; ++i) {
-        pluginFiles->insert(pluginFiles->begin()+i,std::shared_ptr<IPlugin>(new TestPlugin("Hey" + std::to_string(i))));
+    //    pluginFiles->insert(pluginFiles->begin()+i,std::shared_ptr<IPlugin>(new TestPlugin("Hey" + std::to_string(i))));
     }
 
 /**

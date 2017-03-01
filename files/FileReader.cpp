@@ -8,14 +8,17 @@
 #include <c++/cstring>
 
 #else
+
 #include <dirent.h>
+
 #endif
 
 #include <fstream>
 #include <iostream>
 
-#include <sys/stat.h>
+
 #include "FileReader.h"
+#include "FileUtils.h"
 
 namespace ysl {
 
@@ -26,14 +29,7 @@ namespace ysl {
     FileReader::~FileReader() {
 
     }
-
-    int isFile(const char *path) {
-        struct stat path_stat;
-        stat(path, &path_stat);
-        return S_ISREG(path_stat.st_mode);
-    }
-
-    std::vector<std::string> FileReader::readDir(const std::string path) {
+    std::vector<std::string> FileReader::readDir(const std::string path, const std::string fileEnding[]) {
 
         std::vector<std::string> filenames;
 
@@ -55,6 +51,8 @@ namespace ysl {
                 if (is_directory)
                     continue;
 
+                    if(!endsWith(file_name,fileEnding))
+
                 filenames.push_back(full_file_name);
             } while (FindNextFile(dir, &file_data));
 
@@ -71,7 +69,10 @@ namespace ysl {
 
             while ((dirp = readdir(dp)) != NULL) {
 
-                if (isFile(dirp->d_name) != 0) {
+                if (FileUtils::isFile(dirp->d_name) == 0)continue;
+                if (!FileUtils::endsWith(dirp->d_name, fileEnding))continue;
+
+                if (FileUtils::isFile(dirp->d_name) != 0) {
                     filenames.push_back(std::string(dirp->d_name));
                 }
             }
@@ -92,7 +93,10 @@ namespace ysl {
         return fileStreams;
     }
 
-
+    std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string path,
+                                                                   const std::string *fileEnding) {
+        return loadFiles(readDir(path, fileEnding));
+    }
 };
 
 
