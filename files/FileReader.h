@@ -19,11 +19,20 @@ namespace ysl {
 
         ~FileReader();
 
-        std::vector<std::string> readDir(const std::string path, const std::string *fileEnding);
+        std::vector<std::string> readDir(const std::string path, const std::string *fileEnding,
+                                         std::function<std::string(std::string, std::string)> naming);
 
-        std::vector<std::fstream*> loadFilesFromPath(const std::string path, const std::string *fileEndings);
+        std::vector<std::fstream *> loadFilesFromPath(const std::string path, const std::string *fileEndings);
 
         std::vector<std::fstream *> loadFiles(const std::vector<std::string> files);
+
+        static std::string fullyQualifiedName(const std::string path,const std::string fileName){
+            return path+"/"+fileName;
+        }
+
+        static std::string nameOnly(const std::string path, const std::string fileName){
+            return fileName;
+        }
     };
 };
 

@@ -29,7 +29,9 @@ namespace ysl {
     FileReader::~FileReader() {
 
     }
-    std::vector<std::string> FileReader::readDir(const std::string path, const std::string fileEnding[]) {
+
+    std::vector<std::string> FileReader::readDir(const std::string path, const std::string fileEnding[],
+                                                 std::function<std::string(std::string, std::string)> naming) {
 
         std::vector<std::string> filenames;
 
@@ -53,7 +55,9 @@ namespace ysl {
 
                     if(!endsWith(file_name,fileEnding))
 
-                filenames.push_back(full_file_name);
+
+                filenames.push_back(naming(path,file_name));
+
             } while (FindNextFile(dir, &file_data));
 
             FindClose(dir);
@@ -73,7 +77,7 @@ namespace ysl {
                 if (!FileUtils::endsWith(dirp->d_name, fileEnding))continue;
 
                 if (FileUtils::isFile(dirp->d_name) != 0) {
-                    filenames.push_back(std::string(dirp->d_name));
+                    filenames.push_back(naming(path,dirp->d_name));
                 }
             }
             closedir(dp);
@@ -82,7 +86,6 @@ namespace ysl {
 #endif
         return filenames;
     }
-
 
     std::vector<std::fstream *> FileReader::loadFiles(const std::vector<std::string> files) {
         std::vector<std::fstream *> fileStreams;
@@ -95,7 +98,7 @@ namespace ysl {
 
     std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string path,
                                                                    const std::string *fileEnding) {
-        return loadFiles(readDir(path, fileEnding));
+        return loadFiles(readDir(path, fileEnding,FileReader::fullyQualifiedName));
     }
 };
 

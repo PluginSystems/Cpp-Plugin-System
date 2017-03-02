@@ -8,16 +8,18 @@ int main() {
     ysl::PluginLoader loader(".", new ysl::FileReader());
 
 
-    std::vector<std::shared_ptr<IPlugin>> plugins = loader.load();
+    std::map<std::string,std::shared_ptr<IPlugin>> plugins = loader.load();
 
     std::cout << "Plugins loaded: " << plugins.size() << std::endl;
 
-    for(std::shared_ptr<IPlugin> & plugin : plugins){
 
-        plugin->onEnable();
-        std::cout << plugin.use_count() << std::endl;
-        plugin->onDisable();
+    for (const auto& pluginPair : plugins) {
+        pluginPair.second->onEnable();
+        std::cout << pluginPair.second.use_count() << std::endl;
+        pluginPair.second->onDisable();
 
+        std::cout << " type "<<
+                  pluginPair.first << " name " << pluginPair.second->getName() << std::endl;
     }
 
     return 0;
