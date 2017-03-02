@@ -14,12 +14,17 @@ int main() {
 
 
     for (const auto& pluginPair : plugins) {
-        pluginPair.second->onEnable();
-        std::cout << pluginPair.second.use_count() << std::endl;
-        pluginPair.second->onDisable();
 
-        std::cout << " type "<<
-                  pluginPair.first << " name " << pluginPair.second->getName() << std::endl;
+        IPlugin & pl = *pluginPair.second.get();
+
+        pl(true);
+
+        std::cout << pluginPair.second.use_count() << std::endl;
+        //pluginPair.second->onDisable();
+
+        pl(false);
+
+        std::cout << "name: " << *pluginPair.second.get() << std::endl;
     }
 
     return 0;

@@ -6,25 +6,22 @@
 #define CPP_PLUGINTEST_IPLUGIN_H
 
 #include <string>
+#include <sstream>
 
 class IPlugin {
 
-protected:
-    std::string name;
-
 public:
 
-    virtual void onEnable()=0;
+    virtual IPlugin* operator()(bool shouldEnable)=0;
 
-    virtual void onDisable()=0;
+    friend std::ostream& operator <<(std::ostream& os, const IPlugin& s);
 
-    std::string getName(){
-        return this->name;
-    }
+    virtual const std::string getName() const final;
 
-    IPlugin(const std::string name){
-        this->name=name;
-    }
+
+    // virtual void onEnable()=0;
+
+    // virtual void onDisable()=0;
 
 };
 

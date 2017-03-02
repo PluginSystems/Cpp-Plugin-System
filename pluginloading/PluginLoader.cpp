@@ -38,7 +38,7 @@ std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
 
     for (int i = 0; i < size; ++i) {
 
-        std::shared_ptr<IPlugin> plugin = std::shared_ptr<IPlugin>(new TestPlugin("Hey" + std::to_string(i)));
+        std::shared_ptr<IPlugin> plugin = std::shared_ptr<IPlugin>(new TestPlugin);
 
         pluginFiles[std::string(typeid(*plugin.get()).name())] = plugin;
 
@@ -47,7 +47,6 @@ std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
 /**
  * load files and parse
  */
-
 
     return pluginFiles;
 }

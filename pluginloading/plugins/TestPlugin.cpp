@@ -7,14 +7,24 @@
 
 class TestPlugin : public virtual IPlugin {
 public:
-    TestPlugin(const std::string name) : IPlugin(name) {
+    TestPlugin() : IPlugin() {
     }
 
-    void onEnable() override {
-        std::cout << "onEnable " << getName() << std::endl;
+    void onEnable() {
+        std::cout << "onEnable " << *this << std::endl;
     }
 
-    void onDisable() override {
-        std::cout << "onDisable " << getName() << std::endl;
+    void onDisable() {
+        std::cout << "onDisable " << *this << std::endl;
+    }
+
+
+    IPlugin *operator()(bool enable) override {
+        if (enable) {
+            onEnable();
+        } else {
+            onDisable();
+        }
+        return this;
     }
 };
