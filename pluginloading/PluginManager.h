@@ -19,7 +19,7 @@ protected:
 
 public:
 
-    virtual void loadPlugins(std::string path);
+    virtual void loadPlugins(std::string path, std::string *fileEndings);
 
     virtual bool reloadPlugin(std::string dir, std::string fileName);
 

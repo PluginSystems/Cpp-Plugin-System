@@ -5,8 +5,8 @@
 #include "PluginManager.h"
 
 
-void PluginManager::loadPlugins(std::string path) {
-    pluginLoader = ysl::PluginLoader(path, new ysl::FileReader());
+void PluginManager::loadPlugins(std::string path, std::string * fileEndings) {
+    pluginLoader = ysl::PluginLoader(path, new ysl::FileReader(),fileEndings);
     pluginLoader.load();
 }
 

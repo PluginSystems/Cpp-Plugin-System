@@ -9,9 +9,10 @@
 #include "PluginLoader.h"
 
 
-ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader) {
+ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, const std::string fileEndings[]) {
     this->filePath = filePath;
     this->reader = reader;
+    this->fileEndings=fileEndings;
 }
 
 std::string ysl::PluginLoader::getFilePath() {
@@ -19,8 +20,7 @@ std::string ysl::PluginLoader::getFilePath() {
 }
 
 std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
-    const std::string endings[] = {"so","dll"};// "so","dll"
-    std::vector<std::string> files = reader->readDir(filePath, endings, FileReader::fullyQualifiedName);
+    std::vector<std::string> files = reader->readDir(filePath, fileEndings, FileReader::fullyQualifiedName);
 
     std::cout << "Files available: " << files.size() << std::endl;
     for (const std::string name : files) {
@@ -89,13 +89,11 @@ void ysl::PluginLoader::enable() {
 
 
 ysl::PluginLoader::~PluginLoader() {
-    std::cout << "Deleting fileReader" << std::endl;
-
     for (const auto &pluginPair: pluginFiles) {
         disable(pluginPair.first);
+
+        //todo write an unloadmethode in PluginLoader and move code from disable
     }
-
-
     delete (reader);
 }
 

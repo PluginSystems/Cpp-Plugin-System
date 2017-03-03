@@ -32,9 +32,10 @@ namespace ysl {
         ysl::FileReader *reader;
         std::map<std::string,std::shared_ptr<IPlugin>> pluginFiles;
         std::map<std::string,PluginHandle> pluginHandles;
+        const std::string *fileEndings;
 
     public:
-        PluginLoader(std::string filePath, ysl::FileReader *reader);
+        PluginLoader(std::string filePath, ysl::FileReader *reader,const std::string fileEndings[]);
 
         ~PluginLoader();
 

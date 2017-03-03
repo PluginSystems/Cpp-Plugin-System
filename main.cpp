@@ -3,11 +3,12 @@
 #include "pluginloading/PluginLoader.h"
 
 
-#define DEBUG "mode"
-
 int main() {
 
-    ysl::PluginLoader loader(".", new ysl::FileReader());
+
+    const std::string endings[] = {"so", "dll"};// "so","dll"
+
+    ysl::PluginLoader loader(".", new ysl::FileReader(), endings);
 
 
     std::map<std::string, std::shared_ptr<IPlugin>> plugins = loader.load();
@@ -26,9 +27,7 @@ int main() {
 
         pl(false);
 
-#ifdef DEBUG
         std::cout << "name: " << *pluginPair.second.get() << std::endl;
-#endif
     }
 
     return 0;

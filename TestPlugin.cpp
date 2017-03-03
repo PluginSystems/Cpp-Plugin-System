@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "IPlugin.h"
+#include "pluginloading/plugins/IPlugin.h"
 
 class TestPlugin : public virtual IPlugin {
 public:
