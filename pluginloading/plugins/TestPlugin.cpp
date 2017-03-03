@@ -8,6 +8,12 @@
 class TestPlugin : public virtual IPlugin {
 public:
     TestPlugin() : IPlugin() {
+
+
+    }
+
+    ~TestPlugin(){
+
     }
 
     void onEnable() {
@@ -17,14 +23,16 @@ public:
     void onDisable() {
         std::cout << "onDisable " << *this << std::endl;
     }
-
-
-    IPlugin *operator()(bool enable) override {
-        if (enable) {
-            onEnable();
-        } else {
-            onDisable();
-        }
-        return this;
-    }
 };
+
+extern "C" {
+
+IPlugin *create() {
+    return new TestPlugin;
+}
+
+void destroy(IPlugin *p) {
+    delete p;
+}
+
+}

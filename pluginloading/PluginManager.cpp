@@ -6,10 +6,41 @@
 
 
 void PluginManager::loadPlugins(std::string path) {
-
-
-
-
-
-
+    pluginLoader = ysl::PluginLoader(path, new ysl::FileReader());
+    pluginLoader.load();
 }
+
+bool PluginManager::disablePlugins() {
+    //todo implement
+}
+
+bool PluginManager::disablePlugin(std::string pluginName) {
+    pluginLoader.disable(pluginName);
+}
+
+bool PluginManager::enablePlugin(std::string pluginName) {
+    pluginLoader.enable(pluginName);
+}
+
+bool PluginManager::enablePlugins() {
+//todo implement
+}
+
+IPlugin *PluginManager::getPlugin(std::string name) {
+//todo implement
+}
+
+bool PluginManager::reloadPlugin(std::string dir, std::string fileName) {
+//todo implement
+}
+
+bool PluginManager::unloadPlugin(std::string name) {
+//todo implement
+}
+
+void PluginManager::unloadPlugins() {
+//todo implement
+}
+
+
+

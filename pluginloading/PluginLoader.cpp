@@ -5,8 +5,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <dlfcn.h>
 #include "PluginLoader.h"
-#include "plugins/TestPlugin.cpp"
 
 
 ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader) {
@@ -19,40 +19,83 @@ std::string ysl::PluginLoader::getFilePath() {
 }
 
 std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
-    const std::string endings[] = {"txt"};// "so","dll"
+    const std::string endings[] = {"so","dll"};// "so","dll"
     std::vector<std::string> files = reader->readDir(filePath, endings, FileReader::fullyQualifiedName);
 
     std::cout << "Files available: " << files.size() << std::endl;
-
-
-    for (std::string name : files) {
-        std::cout << name << std::endl;
+    for (const std::string name : files) {
+        load(name);
     }
-
-    std::vector<std::fstream *> loadedFiles = reader->loadFilesFromPath(filePath, endings);
-
-    unsigned long long int size = 20;
-
-    //pluginFiles = new std::map<std::string,std::shared_ptr<IPlugin>>();
-
-
-    for (int i = 0; i < size; ++i) {
-
-        std::shared_ptr<IPlugin> plugin = std::shared_ptr<IPlugin>(new TestPlugin);
-
-        pluginFiles[std::string(typeid(*plugin.get()).name())] = plugin;
-
-    }
-
-/**
- * load files and parse
- */
 
     return pluginFiles;
 }
 
+
+void ysl::PluginLoader::load(std::string pluginFileName) {
+    void *pHandle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
+
+    PluginHandle handle;
+
+    handle.handle = pHandle;
+
+
+    if (!pHandle) {
+        std::cerr << "Cannot load library: " << dlerror() << '\n';
+        return;
+    }
+
+    // reset errors
+    dlerror();
+
+    // load the symbols
+    handle.create = (create_t *) dlsym(pHandle, "create");
+    const char *dlsym_error = dlerror();
+    if (dlsym_error) {
+        std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
+        return;
+    }
+
+    handle.destroy = (destroy_t *) dlsym(pHandle, "destroy");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        std::cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
+        return;
+    }
+    std::shared_ptr<IPlugin> iPlugin = std::shared_ptr<IPlugin>(handle.create());
+
+    pluginFiles[iPlugin->getName()] = iPlugin;
+    pluginHandles[iPlugin->getName()] = handle;
+}
+
+void ysl::PluginLoader::enable(std::string pluginName) {
+    pluginFiles[pluginName]->onEnable();
+}
+
+void ysl::PluginLoader::disable(std::string pluginName) {
+    std::shared_ptr<IPlugin> plugin = pluginFiles[pluginName];
+    plugin->onDisable();
+    pluginFiles.erase(pluginName);
+    PluginHandle handle = pluginHandles[pluginName];
+    handle.destroy(plugin.get());
+    dlclose(handle.handle);
+    pluginHandles.erase(pluginName);
+}
+
+void ysl::PluginLoader::enable() {
+    for (auto &pl : pluginFiles) {
+        pl.second->onEnable();
+    }
+}
+
+
 ysl::PluginLoader::~PluginLoader() {
     std::cout << "Deleting fileReader" << std::endl;
+
+    for (const auto &pluginPair: pluginFiles) {
+        disable(pluginPair.first);
+    }
+
+
     delete (reader);
 }
 

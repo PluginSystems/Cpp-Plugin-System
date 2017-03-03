@@ -16,13 +16,22 @@
 
 namespace ysl {
 
+
+    struct PluginHandle{
+        void *handle;
+        create_t* create;
+        destroy_t* destroy;
+    };
+
+
+
     class PluginLoader {
 
     protected:
         std::string filePath;
         ysl::FileReader *reader;
         std::map<std::string,std::shared_ptr<IPlugin>> pluginFiles;
-
+        std::map<std::string,PluginHandle> pluginHandles;
 
     public:
         PluginLoader(std::string filePath, ysl::FileReader *reader);
@@ -31,7 +40,15 @@ namespace ysl {
 
         std::map<std::string,std::shared_ptr<IPlugin>> load();
 
+        void load(std::string pluginFileName);
+
         std::string getFilePath();
+
+        void enable(std::string pluginName);
+        void disable(std::string pluginName);
+
+        void enable();
+
     };
 
 

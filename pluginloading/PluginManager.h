@@ -9,27 +9,34 @@
 #include <string>
 #include <map>
 #include "plugins/IPlugin.h"
+#include "PluginLoader.h"
 
 class PluginManager {
 
 protected:
-    std::map<std::string,IPlugin*> plugins;
+    ysl::PluginLoader pluginLoader;
+
 
 public:
 
-    virtual void loadPlugins(std::string path)=0;
+    virtual void loadPlugins(std::string path);
 
-    virtual bool reloadPlugin(std::string dir, std::string fileName)=0;
+    virtual bool reloadPlugin(std::string dir, std::string fileName);
 
-    virtual void unloadPlugins()=0;
+    virtual bool enablePlugins();
 
-    virtual bool unloadPlugin(std::string name)=0;
+    virtual bool disablePlugins();
 
-    virtual bool unloadPlugin(int index)=0;
+    virtual bool disablePlugin(std::string pluginName);
 
-    virtual IPlugin* getPlugin(std::string name)=0;
+    virtual bool enablePlugin(std::string pluginName);
 
-    virtual IPlugin* getPlugin(int index)=0;
+    virtual void unloadPlugins();
+
+    virtual bool unloadPlugin(std::string name);
+
+    virtual IPlugin *getPlugin(std::string name);
+
 
 };
 
