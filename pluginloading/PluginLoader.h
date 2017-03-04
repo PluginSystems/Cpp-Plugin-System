@@ -34,23 +34,30 @@ namespace ysl {
         std::map<std::string,PluginHandle> pluginHandles;
         const std::string *fileEndings;
 
+        void load(std::string pluginFileName);
+
+
     public:
+
         PluginLoader(std::string filePath, ysl::FileReader *reader,const std::string fileEndings[]);
 
         ~PluginLoader();
 
-        std::map<std::string,std::shared_ptr<IPlugin>> load();
+        void disable(const std::string pluginName);
 
-        void load(std::string pluginFileName);
-
-        std::string getFilePath();
-
-        void enable(std::string pluginName);
-        void disable(std::string pluginName);
-        void unload(std::string pluginName);
+        void enable(const std::string pluginName);
 
         void enable();
 
+        void disable();
+
+        void load();
+
+        void unload();
+
+        std::map<std::string,std::shared_ptr<IPlugin>> getLoadedPlugins();
+
+        void unload(std::string pluginName);
     };
 
 

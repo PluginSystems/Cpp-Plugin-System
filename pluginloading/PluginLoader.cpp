@@ -12,11 +12,12 @@
 #include "PluginLoader.h"
 
 #if _WIN32 || _WIN64
+
 #include <rpc.h>
+
 #else
 #include <dlfcn.h>
 #endif
-
 
 
 ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, const std::string fileEndings[]) {
@@ -25,18 +26,15 @@ ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, c
     this->fileEndings = fileEndings;
 }
 
-std::string ysl::PluginLoader::getFilePath() {
-    return filePath;
-}
-
-std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::load() {
+void ysl::PluginLoader::load() {
     std::vector<std::string> files = reader->readDir(filePath, fileEndings, FileReader::fullyQualifiedName);
-
     std::cout << "Files available: " << files.size() << std::endl;
     for (const std::string name : files) {
         load(name);
     }
+}
 
+std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::getLoadedPlugins() {
     return pluginFiles;
 }
 
@@ -55,7 +53,6 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
     }
 
     handle.handle = hGetProcIDDLL;
-
 
     handle.create = (create_t *) GetProcAddress(hGetProcIDDLL, "create");
     if (!handle.create) {
@@ -105,14 +102,6 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
     pluginHandles[iPlugin->getName()] = handle;
 }
 
-void ysl::PluginLoader::enable(std::string pluginName) {
-    pluginFiles[pluginName]->onEnable();
-}
-
-void ysl::PluginLoader::disable(std::string pluginName) {
-
-}
-
 void ysl::PluginLoader::unload(std::string pluginName) {
     std::shared_ptr<IPlugin> plugin = pluginFiles[pluginName];
     plugin->onDisable();
@@ -121,30 +110,43 @@ void ysl::PluginLoader::unload(std::string pluginName) {
     handle.destroy(plugin.get());
 
 #if _WIN32 || _WIN64
-
-    // todo write windows
-
+    FreeLibrary((HMODULE) handle.handle);
 #else
     dlclose(handle.handle);
 #endif
-
     pluginHandles.erase(pluginName);
-
 }
 
+void ysl::PluginLoader::unload() {
+    for (const auto &pluginPair: pluginFiles) {
+        unload(pluginPair.first);
+    }
+}
+
+void ysl::PluginLoader::enable(const std::string pluginName) {
+    pluginFiles[pluginName]->onEnable();
+}
+
+void ysl::PluginLoader::disable(const std::string pluginName) {
+    pluginFiles[pluginName]->onDisable();
+}
+
+void ysl::PluginLoader::disable() {
+    for (const auto &pluginPair: pluginFiles) {
+        disable(pluginPair.first);
+    }
+}
+
+
 void ysl::PluginLoader::enable() {
-    for (auto &pl : pluginFiles) {
-        pl.second->onEnable();
+    for (const auto &pluginPair: pluginFiles) {
+        enable(pluginPair.first);
     }
 }
 
 
 ysl::PluginLoader::~PluginLoader() {
-    for (const auto &pluginPair: pluginFiles) {
-        disable(pluginPair.first);
-
-        //todo write an unloadmethode in PluginLoader and move code from disable
-    }
+    unload();
     delete (reader);
 }
 

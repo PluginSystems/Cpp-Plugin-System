@@ -8,10 +8,14 @@ int main() {
 
     const std::string endings[] = {"so", "dll"};// "so","dll"
 
-    ysl::PluginLoader loader(".", new ysl::FileReader(), endings);
 
 
-    std::map<std::string, std::shared_ptr<IPlugin>> plugins = loader.load();
+    ysl::PluginLoader loader("plugMeIn/", new ysl::FileReader(), endings);
+
+
+    loader.load();
+
+    std::map<std::string, std::shared_ptr<IPlugin>> plugins = loader.getLoadedPlugins();
 
     std::cout << "Plugins loaded: " << plugins.size() << std::endl;
 
