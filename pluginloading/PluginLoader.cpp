@@ -5,7 +5,10 @@
 
 #include <iostream>
 #include <fstream>
+#if _WIN32 || _WIN64
 #include <fibersapi.h>
+#endif
+
 #include "PluginLoader.h"
 
 #if _WIN32 || _WIN64

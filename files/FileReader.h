@@ -8,7 +8,9 @@
 
 #include <vector>
 #include <string>
+#if _WIN32 || _WIN64
 #include <c++/functional>
+#endif
 
 namespace ysl {
 
