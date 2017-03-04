@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <c++/functional>
 
 namespace ysl {
 

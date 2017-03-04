@@ -47,6 +47,7 @@ namespace ysl {
 
         void enable(std::string pluginName);
         void disable(std::string pluginName);
+        void unload(std::string pluginName);
 
         void enable();
 

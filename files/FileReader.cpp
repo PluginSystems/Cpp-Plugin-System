@@ -53,7 +53,7 @@ namespace ysl {
                 if (is_directory)
                     continue;
 
-                    if(!endsWith(file_name,fileEnding))
+                    if(!FileUtils::endsWith(file_name,fileEnding))
 
 
                 filenames.push_back(naming(path,file_name));
