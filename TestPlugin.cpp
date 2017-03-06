@@ -17,11 +17,11 @@ public:
     }
 
     void onEnable() {
-        std::cout << "onEnable " << *this << std::endl;
+        std::cout << "onEnable " << *this << " Be ready to rumble"<< std::endl;
     }
 
     void onDisable() {
-        std::cout << "onDisable " << *this << std::endl;
+        std::cout << "onDisable " << *this << " Be ready to rumble" << std::endl;
     }
 };
 

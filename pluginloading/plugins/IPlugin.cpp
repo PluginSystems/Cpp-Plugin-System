@@ -19,7 +19,9 @@ std::ostream &operator<<(std::ostream &os, const IPlugin &s) {
     return os;
 }
 
-IPlugin::~IPlugin(){}
+IPlugin::~IPlugin(){
+
+}
 
 
 const std::string IPlugin::getName() const {

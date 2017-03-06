@@ -11,12 +11,12 @@ int FileUtils::isFile(const char *path) {
     return S_ISREG(path_stat.st_mode);
 }
 
-bool FileUtils::endsWith(const std::string &str, const std::string *suffix) {
-    if (suffix->length() == 0)return true;
+bool FileUtils::endsWith(const std::string str, const std::vector<std::string> suffix) {
+    if (suffix.size() == 0)return true;
 
-    for (int i = 0; i < suffix->length(); ++i) {
-        if (str.size() >= suffix->size() &&
-            str.compare(str.size() - suffix->size(), suffix->size(), *suffix) == 0) {
+    for (std::string sf: suffix) {
+        if (str.size() >= sf.size() &&
+            str.compare(str.size() - sf.size(), sf.size(), sf) == 0) {
             return true;
         }
     }

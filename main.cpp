@@ -1,12 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "pluginloading/PluginLoader.h"
 
 
 int main() {
 
 
-    const std::string endings[] = {"so", "dll"};// "so","dll"
+    std::vector<std::string> endings = {"dylib","so","dll"};
+
 
 
 
@@ -15,24 +17,11 @@ int main() {
 
     loader.load();
 
-    std::map<std::string, std::shared_ptr<IPlugin>> plugins = loader.getLoadedPlugins();
-
-    std::cout << "Plugins loaded: " << plugins.size() << std::endl;
 
 
-    for (const auto &pluginPair : plugins) {
+    loader.enable();
 
-        IPlugin &pl = *pluginPair.second.get();
-
-        pl(true);
-
-        std::cout << pluginPair.second.use_count() << std::endl;
-        //pluginPair.second->onDisable();
-
-        pl(false);
-
-        std::cout << "name: " << *pluginPair.second.get() << std::endl;
-    }
+    loader.unload();
 
     return 0;
 }

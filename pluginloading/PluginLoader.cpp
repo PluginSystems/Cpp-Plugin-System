@@ -20,7 +20,7 @@
 #endif
 
 
-ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, const std::string fileEndings[]) {
+ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, std::vector<std::string> fileEndings) {
     this->filePath = filePath;
     this->reader = reader;
     this->fileEndings = fileEndings;
@@ -41,7 +41,9 @@ std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::getLoadedPlug
 
 void ysl::PluginLoader::load(std::string pluginFileName) {
 
-    PluginHandle handle;
+    PluginHandle shandle;
+
+    std::shared_ptr<PluginHandle> handle = std::make_shared<PluginHandle>(shandle);
 
 #if _WIN32 || _WIN64
 
@@ -69,7 +71,7 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
 #else
 
     void *pHandle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
-    handle.handle = pHandle;
+    handle->handle = pHandle;
 
     if (!pHandle) {
         std::cerr << "Cannot load library: " << dlerror() << '\n';
@@ -80,14 +82,14 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
     dlerror();
 
     // load the symbols
-    handle.create = (create_t *) dlsym(pHandle, "create");
+    handle->create = (create_t *) dlsym(pHandle, "create");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
         std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
         return;
     }
 
-    handle.destroy = (destroy_t *) dlsym(pHandle, "destroy");
+    handle->destroy = (destroy_t *) dlsym(pHandle, "destroy");
     dlsym_error = dlerror();
     if (dlsym_error) {
         std::cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
@@ -96,29 +98,34 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
 
 #endif
 
-    std::shared_ptr<IPlugin> iPlugin = std::shared_ptr<IPlugin>(handle.create());
+    std::shared_ptr<IPlugin> iPlugin = std::shared_ptr<IPlugin>(handle->create());
 
     pluginFiles[iPlugin->getName()] = iPlugin;
     pluginHandles[iPlugin->getName()] = handle;
 }
 
-void ysl::PluginLoader::unload(std::string pluginName) {
-    std::shared_ptr<IPlugin> plugin = pluginFiles[pluginName];
+// todo throws error code 11 or 6
+void ysl::PluginLoader::unload(const std::string pluginName) {
+    std::shared_ptr<IPlugin> & plugin = pluginFiles[pluginName];
+
     plugin->onDisable();
-    pluginFiles.erase(pluginName);
-    PluginHandle handle = pluginHandles[pluginName];
-    handle.destroy(plugin.get());
+
+    std::shared_ptr<PluginHandle>  handle = pluginHandles[pluginName];
+    pluginHandles.erase(pluginName);
+
 
 #if _WIN32 || _WIN64
     FreeLibrary((HMODULE) handle.handle);
 #else
-    dlclose(handle.handle);
+
+    std::cout << handle.use_count() << std::endl;
+
+    dlclose(handle->handle);
 #endif
-    pluginHandles.erase(pluginName);
 }
 
 void ysl::PluginLoader::unload() {
-    for (const auto &pluginPair: pluginFiles) {
+    for (auto pluginPair : pluginFiles) {
         unload(pluginPair.first);
     }
 }
@@ -146,7 +153,6 @@ void ysl::PluginLoader::enable() {
 
 
 ysl::PluginLoader::~PluginLoader() {
-    unload();
-    delete (reader);
+    delete reader;
 }
 

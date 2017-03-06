@@ -7,12 +7,13 @@
 
 #include <sys/stat.h>
 #include <string>
+#include <vector>
 
 class FileUtils {
 
 public:
     static int isFile(const char *path);
-    static bool endsWith(const std::string &str, const std::string suffix[]);
+    static bool endsWith(const std::string str, const std::vector<std::string> suffix);
 };
 
 

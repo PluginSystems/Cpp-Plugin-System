@@ -20,7 +20,6 @@
 #include "FileReader.h"
 #include "FileUtils.h"
 
-
 ysl::FileReader::FileReader() {
 
 }
@@ -29,10 +28,36 @@ ysl::FileReader::~FileReader() {
 
 }
 
-std::vector<std::string> ysl::FileReader::readDir(const std::string path, const std::string fileEnding[],
+template<class T, size_t N>
+std::size_t length(const T (&)[N]) {
+    return N;
+};
+
+
+int ysl::FileReader::makedir(const std::string path) {
+
+
+#if _WIN32 || WIN64
+    return _mkdir(path.c_str())
+#else
+    return mkdir(path.c_str(), 0777);
+#endif
+
+
+}
+
+
+std::vector<std::string> ysl::FileReader::readDir(const std::string path, const std::vector<std::string> fileEnding,
                                                   std::function<std::string(std::string, std::string)> naming) {
 
     std::vector<std::string> filenames;
+
+    if (!makedir(path)) {
+        std::cerr << "File Error: " << std::strerror(errno) << std::endl;
+
+    }
+    std::cout << "file endings length: " << fileEnding.size() << std::endl;
+
 
 #if _WIN32 || _WIN64
 
@@ -52,7 +77,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
             if (is_directory)
                 continue;
 
-            if (!FileUtils::endsWith(file_name, fileEnding))
+            if (!FileUtils::endsWith(file_name, fileEnding))continue;
 
 
                 filenames.push_back(naming(path, file_name));
@@ -73,10 +98,11 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
         while ((dirp = readdir(dp)) != NULL) {
 
             if (FileUtils::isFile(dirp->d_name) == 0)continue;
+
             if (!FileUtils::endsWith(dirp->d_name, fileEnding))continue;
 
             if (FileUtils::isFile(dirp->d_name) != 0) {
-                filenames.push_back(naming(path,dirp->d_name));
+                filenames.push_back(naming(path, dirp->d_name));
             }
         }
         closedir(dp);
@@ -85,6 +111,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
 #endif
     return filenames;
 }
+
 
 std::vector<std::fstream *> ysl::FileReader::loadFiles(const std::vector<std::string> files) {
     std::vector<std::fstream *> fileStreams;
@@ -96,7 +123,7 @@ std::vector<std::fstream *> ysl::FileReader::loadFiles(const std::vector<std::st
 }
 
 std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string path,
-                                                               const std::string *fileEnding) {
+                                                               std::vector<std::string> fileEnding) {
     return loadFiles(readDir(path, fileEnding, FileReader::fullyQualifiedName));
 }
 
