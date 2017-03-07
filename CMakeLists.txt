@@ -11,6 +11,6 @@ set(LIBRARY_SOURCES TestPlugin.cpp pluginloading/plugins/IPlugin.cpp)
 
 add_library(Cpp_PluginTest_lib SHARED ${LIBRARY_SOURCES})
 
-if (CMAKE_COMPILER_IS_GNUCXXX)
+if (CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(Cpp_PluginTest dl)
-endif (CMAKE_COMPILER_IS_GNUCXXX)
+endif (CMAKE_COMPILER_IS_GNUCXX)
