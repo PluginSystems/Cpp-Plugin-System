@@ -20,30 +20,27 @@
 #endif
 
 
-ysl::PluginLoader::PluginLoader(std::string filePath, ysl::FileReader *reader, std::vector<std::string> fileEndings) {
+ysl::PluginLoader::PluginLoader(std::string& filePath, std::vector<std::string>& fileEndings) {
     this->filePath = filePath;
-    this->reader = reader;
     this->fileEndings = fileEndings;
 }
 
 void ysl::PluginLoader::load() {
-    std::vector<std::string> files = reader->readDir(filePath, fileEndings, FileReader::fullyQualifiedName);
+    FileReader reader;
+    std::vector<std::string> files = reader.readDir(filePath, fileEndings);
     std::cout << "Files available: " << files.size() << std::endl;
-    for (const std::string name : files) {
-        load(name);
+    for (const std::string& name : files) {
+        this->load(name);
     }
 }
 
-std::map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::getLoadedPlugins() {
+std::unordered_map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::getLoadedPlugins() {
     return pluginFiles;
 }
 
 
-void ysl::PluginLoader::load(std::string pluginFileName) {
-
-    PluginHandle shandle;
-
-    std::shared_ptr<PluginHandle> handle = std::make_shared<PluginHandle>(shandle);
+void ysl::PluginLoader::load(const std::string& pluginFileName) {
+    std::shared_ptr<PluginHandle> handle = std::shared_ptr<PluginHandle>(new PluginHandle);
 
 #if _WIN32 || _WIN64
 
@@ -62,18 +59,11 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
         return;
     }
 
-    handle.destroy = (destroy_t *) GetProcAddress(hGetProcIDDLL, "destroy");
-    if (!handle.create) {
-        std::cout << "could not locate the function" << std::endl;
-        return;
-    }
-
 #else
 
-    void *pHandle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
-    handle->handle = pHandle;
+    handle->handle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
 
-    if (!pHandle) {
+    if (!handle->handle) {
         std::cerr << "Cannot load library: " << dlerror() << '\n';
         return;
     }
@@ -82,74 +72,60 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
     dlerror();
 
     // load the symbols
-    handle->create = (create_t *) dlsym(pHandle, "create");
+    handle->create = (create_t *) dlsym(handle->handle, "create");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
         std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
         return;
     }
 
-    handle->destroy = (destroy_t *) dlsym(pHandle, "destroy");
-    dlsym_error = dlerror();
-    if (dlsym_error) {
-        std::cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
-        return;
-    }
-
 #endif
 
-    std::shared_ptr<IPlugin> iPlugin = std::shared_ptr<IPlugin>(handle->create());
+    std::shared_ptr<IPlugin> iPlugin = handle->create();
 
     pluginFiles[iPlugin->getName()] = iPlugin;
     pluginHandles[iPlugin->getName()] = handle;
 }
 
-// todo throws error code 11 or 6
-void ysl::PluginLoader::unload(const std::string pluginName) {
-    std::shared_ptr<IPlugin> & plugin = pluginFiles[pluginName];
+void ysl::PluginLoader::unload(const std::string& pluginName) {
 
-    std::shared_ptr<PluginHandle>  handle = pluginHandles[pluginName];
+    pluginFiles.erase(pluginName);
+
+    PluginHandle handle = *pluginHandles[pluginName];
     pluginHandles.erase(pluginName);
-
 
 #if _WIN32 || _WIN64
     FreeLibrary((HMODULE) handle.handle);
 #else
-
-    //todo Bueddl hier Spackt es rum
-    dlclose(handle->handle);
+    dlclose(handle.handle);
 #endif
+
+
 }
 
 void ysl::PluginLoader::unload() {
-    for (auto pluginPair : pluginFiles) {
+    for (auto &pluginPair : pluginFiles) {
         unload(pluginPair.first);
     }
 }
 
-void ysl::PluginLoader::enable(const std::string pluginName) {
+void ysl::PluginLoader::enable(const std::string& pluginName) {
     pluginFiles[pluginName]->onEnable();
 }
 
-void ysl::PluginLoader::disable(const std::string pluginName) {
+void ysl::PluginLoader::disable(const std::string& pluginName) {
     pluginFiles[pluginName]->onDisable();
 }
 
 void ysl::PluginLoader::disable() {
     for (const auto &pluginPair: pluginFiles) {
-        disable(pluginPair.first);
+        pluginPair.second->onDisable();
     }
 }
 
 
 void ysl::PluginLoader::enable() {
     for (const auto &pluginPair: pluginFiles) {
-        enable(pluginPair.first);
+        pluginPair.second->onEnable();
     }
 }
-
-
-ysl::PluginLoader::~PluginLoader() {
-    delete reader;
-}
-

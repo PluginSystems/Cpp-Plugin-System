@@ -17,7 +17,6 @@
 #include <iostream>
 
 
-
 #include "FileReader.h"
 #include "FileUtils.h"
 
@@ -42,8 +41,7 @@ int ysl::FileReader::makedir(const std::string path) {
 }
 
 
-std::vector<std::string> ysl::FileReader::readDir(const std::string path, const std::vector<std::string> fileEnding,
-                                                  std::function<std::string(std::string, std::string)> naming) {
+std::vector<std::string> ysl::FileReader::readDir(const std::string &path, const std::vector<std::string> &fileEnding) {
 
     std::vector<std::string> filenames;
 
@@ -92,7 +90,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
 
         while ((dirp = readdir(dp)) != NULL) {
 
-            std::string fullName = naming(path,dirp->d_name);
+            std::string fullName = path + "/" + dirp->d_name;
 
 
             if (FileUtils::isFile(fullName.c_str()) == 0)continue;
@@ -100,7 +98,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
             if (!FileUtils::endsWith(fullName, fileEnding))continue;
 
             if (FileUtils::isFile(fullName.c_str()) != 0) {
-                filenames.push_back(naming(path, dirp->d_name));
+                filenames.push_back(fullName);
             }
         }
         closedir(dp);
@@ -120,9 +118,9 @@ std::vector<std::fstream *> ysl::FileReader::loadFiles(const std::vector<std::st
     return fileStreams;
 }
 
-std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string path,
+std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string& path,
                                                                std::vector<std::string> fileEnding) {
-    return loadFiles(readDir(path, fileEnding, FileReader::fullyQualifiedName));
+    return loadFiles(readDir(path, fileEnding));
 }
 
 

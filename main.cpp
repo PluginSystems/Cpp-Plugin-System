@@ -9,10 +9,11 @@ int main() {
 
     std::vector<std::string> endings = {"dylib","so","dll"};
 
+    std::string pluginDir = "plugMeIn";
 
 
 
-    ysl::PluginLoader loader("plugMeIn/", new ysl::FileReader(), endings);
+    ysl::PluginLoader loader(pluginDir, endings);
 
 
     loader.load();

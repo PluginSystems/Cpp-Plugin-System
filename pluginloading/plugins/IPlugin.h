@@ -12,14 +12,9 @@ class IPlugin {
 
 public:
 
-    virtual ~IPlugin() = 0;
+    virtual ~IPlugin();
 
-    virtual IPlugin *operator()(bool shouldEnable) final;
-
-    friend std::ostream &operator<<(std::ostream &os, const IPlugin &s);
-
-    virtual const std::string getName() const final;
-
+    virtual const std::string getName()=0;
 
     virtual void onEnable()=0;
 
@@ -27,8 +22,6 @@ public:
 
 };
 
-typedef IPlugin* create_t();
-typedef void destroy_t(IPlugin*);
-
+typedef std::shared_ptr<IPlugin> create_t();
 
 #endif //CPP_PLUGINTEST_IPLUGIN_H

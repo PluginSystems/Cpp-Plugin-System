@@ -10,6 +10,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include "plugins/IPlugin.h"
 #include "../files/FileReader.h"
 
@@ -18,9 +19,8 @@ namespace ysl {
 
 
     struct PluginHandle {
-        void *handle;
-        create_t *create;
-        destroy_t *destroy;
+        void * handle;
+        create_t * create;
     };
 
 
@@ -28,23 +28,20 @@ namespace ysl {
 
     protected:
         std::string filePath;
-        ysl::FileReader *reader;
-        std::map<std::string, std::shared_ptr<IPlugin>> pluginFiles;
-        std::map<std::string, std::shared_ptr<PluginHandle>> pluginHandles;
+        std::unordered_map<std::string, std::shared_ptr<IPlugin>> pluginFiles;
+        std::unordered_map<std::string, std::shared_ptr<PluginHandle>> pluginHandles;
         std::vector<std::string> fileEndings;
 
-        void load(std::string pluginFileName);
+        void load(const std::string& pluginFileName);
 
 
     public:
 
-        PluginLoader(std::string filePath, ysl::FileReader *reader, std::vector<std::string> fileEndings);
+        PluginLoader(std::string& filePath, std::vector<std::string>& fileEndings);
 
-        ~PluginLoader();
+        void disable(const std::string& pluginName);
 
-        void disable(const std::string pluginName);
-
-        void enable(const std::string pluginName);
+        void enable(const std::string& pluginName);
 
         void enable();
 
@@ -54,9 +51,9 @@ namespace ysl {
 
         void unload();
 
-        std::map<std::string, std::shared_ptr<IPlugin>> getLoadedPlugins();
+        std::unordered_map<std::string, std::shared_ptr<IPlugin>> getLoadedPlugins();
 
-        void unload(std::string pluginName);
+        void unload(const std::string& pluginName);
     };
 
 

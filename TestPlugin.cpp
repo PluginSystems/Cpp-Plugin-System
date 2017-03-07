@@ -9,30 +9,30 @@ class TestPlugin : public virtual IPlugin {
 public:
     TestPlugin() : IPlugin() {
 
-
     }
 
     ~TestPlugin(){
 
     }
 
-    void onEnable() {
-        std::cout << "onEnable " << *this << " Be ready to rumble"<< std::endl;
+    const std::string getName() override {
+        return "ysl:TestPlugin";
     }
 
-    void onDisable() {
-        std::cout << "onDisable " << *this << " Be ready to rumble" << std::endl;
+
+    void onEnable() override {
+        std::cout << "onEnable " << this->getName() << " Be ready to rumble"<< std::endl;
+    }
+
+    void onDisable() override {
+        std::cout << "onDisable " << this->getName() << " Be ready to rumble" << std::endl;
     }
 };
 
 extern "C" {
 
-IPlugin *create() {
-    return new TestPlugin;
-}
-
-void destroy(IPlugin *p) {
-    delete p;
+std::shared_ptr<IPlugin> create() {
+    return std::shared_ptr<TestPlugin>(new TestPlugin);
 }
 
 }
