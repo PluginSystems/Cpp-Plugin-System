@@ -7,9 +7,11 @@
 
 
 #include <vector>
-#include <string>
+#include <cstring>
 #if _WIN32 || _WIN64
 #include <c++/functional>
+#else
+#include <functional>
 #endif
 
 namespace ysl {

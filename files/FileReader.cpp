@@ -17,6 +17,7 @@
 #include <iostream>
 
 
+
 #include "FileReader.h"
 #include "FileUtils.h"
 
@@ -27,12 +28,6 @@ ysl::FileReader::FileReader() {
 ysl::FileReader::~FileReader() {
 
 }
-
-template<class T, size_t N>
-std::size_t length(const T (&)[N]) {
-    return N;
-};
-
 
 int ysl::FileReader::makedir(const std::string path) {
 
@@ -77,7 +72,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
             if (is_directory)
                 continue;
 
-            if (!FileUtils::endsWith(file_name, fileEnding))continue;
+            if (!FileUtils::endsWith(full_file_name, fileEnding))continue;
 
 
                 filenames.push_back(naming(path, file_name));
@@ -97,11 +92,14 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string path, const 
 
         while ((dirp = readdir(dp)) != NULL) {
 
-            if (FileUtils::isFile(dirp->d_name) == 0)continue;
+            std::string fullName = naming(path,dirp->d_name);
 
-            if (!FileUtils::endsWith(dirp->d_name, fileEnding))continue;
 
-            if (FileUtils::isFile(dirp->d_name) != 0) {
+            if (FileUtils::isFile(fullName.c_str()) == 0)continue;
+
+            if (!FileUtils::endsWith(fullName, fileEnding))continue;
+
+            if (FileUtils::isFile(fullName.c_str()) != 0) {
                 filenames.push_back(naming(path, dirp->d_name));
             }
         }

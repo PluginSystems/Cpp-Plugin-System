@@ -3,11 +3,9 @@
 //
 
 #if _WIN32 || _WIN64
-
 #include <typeinfo.h>
 #else
-#include <dlfcn.h>
-#include <dlfcn.h>
+#include <typeinfo>
 #endif
 
 
