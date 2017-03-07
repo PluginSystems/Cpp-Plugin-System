@@ -21,6 +21,8 @@ int main() {
 
     loader.enable();
 
+    loader.disable();
+
     loader.unload();
 
     return 0;

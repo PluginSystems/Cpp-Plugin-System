@@ -108,8 +108,6 @@ void ysl::PluginLoader::load(std::string pluginFileName) {
 void ysl::PluginLoader::unload(const std::string pluginName) {
     std::shared_ptr<IPlugin> & plugin = pluginFiles[pluginName];
 
-    plugin->onDisable();
-
     std::shared_ptr<PluginHandle>  handle = pluginHandles[pluginName];
     pluginHandles.erase(pluginName);
 
@@ -118,8 +116,7 @@ void ysl::PluginLoader::unload(const std::string pluginName) {
     FreeLibrary((HMODULE) handle.handle);
 #else
 
-    std::cout << handle.use_count() << std::endl;
-
+    //todo Bueddl hier Spackt es rum
     dlclose(handle->handle);
 #endif
 }
