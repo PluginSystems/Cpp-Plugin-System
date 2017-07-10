@@ -13,11 +13,7 @@ protected:
 
     void runTest(unsigned long cycle) override {
 
-        std::vector<std::string> endings = {"dylib","so","dll"};
-
-        std::string pluginDir = "plugMeIn";
-
-        ysl::PluginLoader loader(pluginDir, endings);
+        ysl::PluginLoader loader("plugMeIn", {"dylib","so","dll"});
 
 
         startTimer();

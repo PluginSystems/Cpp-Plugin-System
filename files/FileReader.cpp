@@ -49,7 +49,7 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string &path, const
         std::cerr << "File Error: " << std::strerror(errno) << std::endl;
 
     }
-    std::cout << "file endings length: " << fileEnding.size() << std::endl;
+    //std::cout << "file endings length: " << fileEnding.size() << std::endl;
 
 
 #if _WIN32 || _WIN64

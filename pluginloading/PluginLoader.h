@@ -37,7 +37,7 @@ namespace ysl {
 
     public:
 
-        PluginLoader(std::string& filePath, std::vector<std::string>& fileEndings);
+        PluginLoader(const std::string& filePath, const std::vector<std::string>& fileEndings);
 
         void disable(const std::string& pluginName);
 
