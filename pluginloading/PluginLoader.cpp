@@ -40,7 +40,10 @@ std::unordered_map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::get
 
 
 void ysl::PluginLoader::load(const std::string& pluginFileName) {
-    std::shared_ptr<PluginHandle> handle = std::shared_ptr<PluginHandle>(new PluginHandle);
+
+    //std::shared_ptr<PluginHandle> handle = std::shared_ptr<PluginHandle>(new PluginHandle);
+
+    PluginHandle handle;
 
 #if _WIN32 || _WIN64
 
@@ -61,9 +64,9 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
 
 #else
 
-    handle->handle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
+    handle.handle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
 
-    if (!handle->handle) {
+    if (!handle.handle) {
         std::cerr << "Cannot load library: " << dlerror() << '\n';
         return;
     }
@@ -72,7 +75,7 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
     dlerror();
 
     // load the symbols
-    handle->create = (create_t *) dlsym(handle->handle, "create");
+    handle.create = (create_t *) dlsym(handle.handle, "create");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
         std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
@@ -81,10 +84,10 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
 
 #endif
 
-    std::shared_ptr<IPlugin> iPlugin = handle->create();
+    std::shared_ptr<IPlugin> iPlugin = handle.create();
 
     pluginFiles[iPlugin->getName()] = iPlugin;
-    pluginHandles[iPlugin->getName()] = handle;
+    pluginHandles[iPlugin->getName()] = std::make_shared<PluginHandle>(handle);
 }
 
 void ysl::PluginLoader::unload(const std::string& pluginName) {

@@ -3,7 +3,7 @@ project(Cpp_PluginTest)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp pluginloading/plugins/IPlugin.h pluginloading/PluginLoader.cpp pluginloading/PluginLoader.h StreamPrinter.cpp StreamPrinter.h pluginloading/plugins/IPlugin.cpp files/FileUtils.cpp files/FileUtils.h files/FileReader.h files/FileReader.cpp)
+set(SOURCE_FILES main.cpp pluginloading/plugins/IPlugin.h pluginloading/PluginLoader.cpp pluginloading/PluginLoader.h StreamPrinter.cpp StreamPrinter.h pluginloading/plugins/IPlugin.cpp files/FileUtils.cpp files/FileUtils.h files/FileReader.h files/FileReader.cpp tests/TestCase.h tests/BenchmarkRun.h tests/BenchmarkRun.cpp tests/util/Stopwatch.h tests/util/Stopwatch.cpp tests/benchmarks/LoadAndUnloadBenchmark.h tests/benchmarks/EnableAndDisableBenchmark.h)
 add_executable(Cpp_PluginTest ${SOURCE_FILES})
 
 
