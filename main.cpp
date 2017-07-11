@@ -12,15 +12,21 @@ int main() {
     std::list<std::shared_ptr<TestCase>> benchmarks;
 
 
-    benchmarks.push_back(std::shared_ptr<TestCase>(new LoadAndUnloadBenchmark()));
-    benchmarks.push_back(std::shared_ptr<TestCase>(new EnableAndDisableBenchmark()));
+    ysl::PluginLoader loader("plugMeIn", {"dylib", "so", "dll"});
 
 
-    int count = 100;
+    benchmarks.push_back(std::shared_ptr<TestCase>(new LoadAndUnloadBenchmark(loader)));
+    benchmarks.push_back(std::shared_ptr<TestCase>(new EnableAndDisableBenchmark(loader)));
+
+
+    unsigned long count = 20;
 
     for (std::shared_ptr<TestCase> testCase: benchmarks) {
+        testCase->setUp();
         testCase->runTestFully(count);
+        testCase->tearDown();
         std::cout << "Test run finished" << std::endl;
+        sleep(10);
     }
 
 
@@ -31,6 +37,7 @@ int main() {
         finishedBenchmark->printStats(out);
     }
 
+    benchmarks.clear();
 
 
     return 0;

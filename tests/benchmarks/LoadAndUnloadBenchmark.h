@@ -9,11 +9,12 @@
 class LoadAndUnloadBenchmark : public TestCase {
 
 
+
+public:
+    LoadAndUnloadBenchmark(ysl::PluginLoader&pluginLoader) : TestCase(pluginLoader) {}
+
 protected:
-
     void runTest(unsigned long cycle) override {
-
-        ysl::PluginLoader loader("plugMeIn", {"dylib","so","dll"});
 
 
         startTimer();
@@ -24,6 +25,8 @@ protected:
 
         defineBenchmarkPoint(cycle,getName());
         resetTimer();
+
+        sleep(1);
     }
 
     std::string getName() override {

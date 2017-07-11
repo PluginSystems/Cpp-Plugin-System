@@ -6,7 +6,7 @@
 #define CPP_PLUGINTEST_STREAMPRINTER_H
 
 
-#include "files/FileReader.h"
+#include "../files/FileReader.h"
 
 class StreamPrinter {
 

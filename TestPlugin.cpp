@@ -12,7 +12,6 @@ public:
     }
 
     ~TestPlugin(){
-
     }
 
     const std::string getName() override {

@@ -13,18 +13,24 @@
 class EnableAndDisableBenchmark : public TestCase {
 
 
-protected:
+public:
+    EnableAndDisableBenchmark(ysl::PluginLoader& pluginLoader) : TestCase(pluginLoader) {
 
+    }
+
+    void setUp() override {
+        loader.load();
+    }
+
+    void tearDown() override {
+        loader.unload();
+    }
+
+
+
+protected:
     void runTest(unsigned long cycle) override {
 
-        std::vector<std::string> endings = {"dylib", "so", "dll"};
-
-        std::string pluginDir = "plugMeIn";
-
-        ysl::PluginLoader loader(pluginDir, endings);
-
-
-        loader.load();
 
         startTimer();
 
@@ -36,13 +42,13 @@ protected:
         defineBenchmarkPoint(cycle, getName());
         resetTimer();
 
-        loader.unload();
-
+        sleep(1);
 
     }
 
     std::string getName() override {
         return "EnableAndDisableBenchmark";
     }
+
 
 };
