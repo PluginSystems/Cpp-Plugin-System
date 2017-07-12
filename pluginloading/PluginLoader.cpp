@@ -94,7 +94,7 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
 
 
 
-void ysl::PluginLoader::unload(const std::string pluginName) {
+void ysl::PluginLoader::unload(const std::string& pluginName) {
 
     pluginFiles.erase(pluginName);
 
@@ -104,7 +104,7 @@ void ysl::PluginLoader::unload(const std::string pluginName) {
 #if _WIN32 || _WIN64
     FreeLibrary((HMODULE) handle.handle);
 #else
-    std::cout << "check if success 0: "<<dlclose(handle.handle)<<std::endl;
+    dlclose(handle.handle);
 #endif
 
 

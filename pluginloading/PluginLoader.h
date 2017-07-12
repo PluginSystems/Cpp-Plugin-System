@@ -53,7 +53,7 @@ namespace ysl {
 
         std::unordered_map<std::string, std::shared_ptr<IPlugin>> getLoadedPlugins();
 
-        void unload(const std::string pluginName);
+        void unload(const std::string& pluginName);
     };
 
 
