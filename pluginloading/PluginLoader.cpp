@@ -26,6 +26,8 @@ ysl::PluginLoader::PluginLoader(const std::string& filePath, const std::vector<s
 }
 
 void ysl::PluginLoader::load() {
+    this->pluginFiles= std::unordered_map<std::string, std::shared_ptr<IPlugin>>();
+    this->pluginHandles = std::unordered_map<std::string, std::shared_ptr<PluginHandle>>();
     FileReader reader;
     std::vector<std::string> files = reader.readDir(filePath, fileEndings);
     std::cout << "Files available: " << files.size() << std::endl;
@@ -83,11 +85,16 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
 
     std::shared_ptr<IPlugin> iPlugin = handle->create();
 
-    pluginFiles[iPlugin->getName()] = iPlugin;
-    pluginHandles[iPlugin->getName()] = handle;
+
+    const std::string pluginName = iPlugin->getName();
+
+    pluginFiles[pluginName] = iPlugin;
+    pluginHandles[pluginName] = handle;
 }
 
-void ysl::PluginLoader::unload(const std::string& pluginName) {
+
+
+void ysl::PluginLoader::unload(const std::string pluginName) {
 
     pluginFiles.erase(pluginName);
 
@@ -97,7 +104,7 @@ void ysl::PluginLoader::unload(const std::string& pluginName) {
 #if _WIN32 || _WIN64
     FreeLibrary((HMODULE) handle.handle);
 #else
-    dlclose(handle.handle);
+    std::cout << "check if success 0: "<<dlclose(handle.handle)<<std::endl;
 #endif
 
 
