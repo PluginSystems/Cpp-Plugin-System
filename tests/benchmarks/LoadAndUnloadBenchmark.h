@@ -23,10 +23,8 @@ protected:
         loader.unload();
         stopTimer();
 
-        defineBenchmarkPoint(cycle,getName());
+        defineBenchmarkPoint(cycle,getName()+"_"+std::to_string(cycle+1));
         resetTimer();
-
-        sleep(1);
     }
 
     std::string getName() override {

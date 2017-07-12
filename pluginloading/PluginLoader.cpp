@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+
 #if _WIN32 || _WIN64
 #include <fibersapi.h>
 #endif
@@ -16,22 +17,24 @@
 #include <rpc.h>
 
 #else
+
 #include <dlfcn.h>
+
 #endif
 
 
-ysl::PluginLoader::PluginLoader(const std::string& filePath, const std::vector<std::string>& fileEndings) {
+ysl::PluginLoader::PluginLoader(const std::string &filePath, const std::vector<std::string> &fileEndings) {
     this->filePath = filePath;
     this->fileEndings = fileEndings;
 }
 
 void ysl::PluginLoader::load() {
-    this->pluginFiles= std::unordered_map<std::string, std::shared_ptr<IPlugin>>();
+    this->pluginFiles = std::unordered_map<std::string, std::shared_ptr<IPlugin>>();
     this->pluginHandles = std::unordered_map<std::string, std::shared_ptr<PluginHandle>>();
     FileReader reader;
     std::vector<std::string> files = reader.readDir(filePath, fileEndings);
     std::cout << "Files available: " << files.size() << std::endl;
-    for (const std::string& name : files) {
+    for (const std::string &name : files) {
         this->load(name);
     }
 }
@@ -41,8 +44,8 @@ std::unordered_map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::get
 }
 
 
-void ysl::PluginLoader::load(const std::string& pluginFileName) {
-    std::shared_ptr<PluginHandle> handle = std::shared_ptr<PluginHandle>(new PluginHandle);
+void ysl::PluginLoader::load(const std::string &pluginFileName) {
+    std::shared_ptr<PluginHandle> handle = std::make_shared<PluginHandle>(PluginHandle());
 
 #if _WIN32 || _WIN64
 
@@ -93,8 +96,7 @@ void ysl::PluginLoader::load(const std::string& pluginFileName) {
 }
 
 
-
-void ysl::PluginLoader::unload(const std::string& pluginName) {
+void ysl::PluginLoader::unload(const std::string &pluginName) {
 
     pluginFiles.erase(pluginName);
 
@@ -111,16 +113,18 @@ void ysl::PluginLoader::unload(const std::string& pluginName) {
 }
 
 void ysl::PluginLoader::unload() {
-    for (auto &pluginPair : pluginFiles) {
-        unload(pluginPair.first);
+
+    for (auto it = pluginFiles.cbegin(); it != pluginFiles.cend();) {
+        auto plugin = it++;
+        unload(plugin->first);
     }
 }
 
-void ysl::PluginLoader::enable(const std::string& pluginName) {
+void ysl::PluginLoader::enable(const std::string &pluginName) {
     pluginFiles[pluginName]->onEnable();
 }
 
-void ysl::PluginLoader::disable(const std::string& pluginName) {
+void ysl::PluginLoader::disable(const std::string &pluginName) {
     pluginFiles[pluginName]->onDisable();
 }
 
