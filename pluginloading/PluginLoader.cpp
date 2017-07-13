@@ -40,7 +40,7 @@ std::unordered_map<std::string, std::shared_ptr<IPlugin>> ysl::PluginLoader::get
 
 
 void ysl::PluginLoader::load(const std::string& pluginFileName) {
-    std::shared_ptr<PluginHandle> handle = std::shared_ptr<PluginHandle>(new PluginHandle);
+    std::shared_ptr<PluginHandle> handle = std::make_shared<PluginHandle>(PluginHandle());
 
 #if _WIN32 || _WIN64
 
@@ -104,8 +104,9 @@ void ysl::PluginLoader::unload(const std::string& pluginName) {
 }
 
 void ysl::PluginLoader::unload() {
-    for (auto &pluginPair : pluginFiles) {
-        unload(pluginPair.first);
+    for(auto it = pluginFiles.cbegin();it != pluginFiles.cend();){
+        auto plugin = it;
+        unload(plugin->first);
     }
 }
 

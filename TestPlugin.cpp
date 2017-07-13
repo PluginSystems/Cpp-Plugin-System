@@ -32,7 +32,7 @@ public:
 extern "C" {
 
 std::shared_ptr<IPlugin> create() {
-    return std::shared_ptr<TestPlugin>(new TestPlugin);
+    return std::make_shared<TestPlugin>(TestPlugin());
 }
 
 }

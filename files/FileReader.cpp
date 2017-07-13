@@ -109,16 +109,16 @@ std::vector<std::string> ysl::FileReader::readDir(const std::string &path, const
 }
 
 
-std::vector<std::fstream *> ysl::FileReader::loadFiles(const std::vector<std::string> files) {
-    std::vector<std::fstream *> fileStreams;
+std::vector<std::shared_ptr<std::fstream>> ysl::FileReader::loadFiles(const std::vector<std::string> files) {
+    std::vector<std::shared_ptr<std::fstream>> fileStreams;
     for (std::string file : files) {
-        std::fstream *fileD = new std::fstream(file);
+        std::shared_ptr<std::fstream> fileD = std::make_shared<std::fstream>(std::fstream(file));
         fileStreams.push_back(fileD);
     }
     return fileStreams;
 }
 
-std::vector<std::fstream *> ysl::FileReader::loadFilesFromPath(const std::string& path,
+std::vector<std::shared_ptr<std::fstream>> ysl::FileReader::loadFilesFromPath(const std::string& path,
                                                                std::vector<std::string> fileEnding) {
     return loadFiles(readDir(path, fileEnding));
 }
