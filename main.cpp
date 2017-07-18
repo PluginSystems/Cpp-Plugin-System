@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <fstream>
 #include "pluginloading/PluginLoader.h"
 #include "tests/TestCase.h"
 #include "tests/benchmarks/LoadAndUnloadBenchmark.h"
@@ -19,7 +20,7 @@ int main() {
     benchmarks.push_back(std::make_shared<EnableAndDisableBenchmark>(EnableAndDisableBenchmark(loader)));
 
 
-    unsigned long count = 1000;
+    unsigned long count = 250;
 
         for (std::shared_ptr<TestCase> testCase: benchmarks) {
             testCase->setUp();
@@ -28,14 +29,22 @@ int main() {
             std::cout << "Test run finished" << std::endl;
         }
 
-    std::ostream &out = std::cout;
+    std::ofstream resultFileStream;
+
+    std::stringstream fileName;
 
 
+    fileName << "results_"<< count <<"_" << std::chrono::system_clock::now().time_since_epoch().count() << ".csv";
+
+
+    resultFileStream.open(fileName.str());
 
     for (std::shared_ptr<TestCase> finishedBenchmark : benchmarks) {
-        finishedBenchmark->printStats(out);
+        finishedBenchmark->printStats(resultFileStream);
     }
     benchmarks.clear();
+
+    resultFileStream.close();
 
 
     return 0;
