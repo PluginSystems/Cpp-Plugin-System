@@ -22,8 +22,8 @@ private:
 
     std::vector<BenchmarkRun> benchmarkRuns;
 
-    long long getElapsedMicros() {
-        return stopwatch.getMicros();
+    long long getElapsedTime() {
+        return stopwatch.getNanos();
     }
 
 
@@ -33,7 +33,7 @@ protected:
 
     virtual void runTest(unsigned long cycle)=0;
 
-    virtual std::string getName()=0;
+
 
 
     void startTimer() {
@@ -49,11 +49,11 @@ protected:
     }
 
     void defineBenchmarkPoint(unsigned long cycle, std::string benchmarkPointName) {
-        benchmarkRuns.at(cycle).defineBenchmarkPoint(benchmarkPointName, getElapsedMicros());
+        benchmarkRuns.at(cycle).defineBenchmarkPoint(benchmarkPointName, getElapsedTime());
     }
 
     void defineBenchmarkPoint(unsigned long cycle, std::string benchmarkPointName, int run) {
-        benchmarkRuns.at(cycle).defineBenchmarkPoint(benchmarkPointName, run, getElapsedMicros());
+        benchmarkRuns.at(cycle).defineBenchmarkPoint(benchmarkPointName, run, getElapsedTime());
     }
 
 
@@ -62,6 +62,7 @@ public:
     TestCase(ysl::PluginLoader& pluginLoader): loader(pluginLoader){
     }
 
+    virtual std::string getName()=0;
 
     virtual void setUp(){}
     virtual void tearDown(){}
@@ -79,8 +80,6 @@ public:
 
 
     void printStats(std::ostream &outputStream) {
-        outputStream << "Benchmark " << getName() << ";microseconds/op" << std::endl;
-
         for (auto benchmark : benchmarkRuns) {
             benchmark.printStats(outputStream);
         }

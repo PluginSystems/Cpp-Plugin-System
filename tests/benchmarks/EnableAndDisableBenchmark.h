@@ -26,7 +26,9 @@ public:
         loader.unload();
     }
 
-
+    std::string getName() override {
+        return "EnableAndDisableBenchmark";
+    }
 
 protected:
     void runTest(unsigned long cycle) override {
@@ -43,9 +45,7 @@ protected:
         resetTimer();
     }
 
-    std::string getName() override {
-        return "EnableAndDisableBenchmark";
-    }
+
 
 
 };

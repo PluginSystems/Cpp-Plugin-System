@@ -13,6 +13,11 @@ class LoadAndUnloadBenchmark : public TestCase {
 public:
     LoadAndUnloadBenchmark(ysl::PluginLoader&pluginLoader) : TestCase(pluginLoader) {}
 
+
+    std::string getName() override {
+        return "LoadAndUnloadBenchmark";
+    }
+
 protected:
     void runTest(unsigned long cycle) override {
 
@@ -27,9 +32,7 @@ protected:
         resetTimer();
     }
 
-    std::string getName() override {
-        return "LoadAndUnloadBenchmark";
-    }
+
 
 
 };

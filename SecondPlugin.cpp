@@ -1,21 +1,21 @@
 //
-// Created by yannick lamprecht on 24.02.17.
+// Created by yannick lamprecht on 22.07.17.
 //
 
 #include <iostream>
 #include "pluginloading/plugins/IPlugin.h"
 
-class TestPlugin : public virtual IPlugin {
+class SecondPlugin : public virtual IPlugin {
 public:
-    TestPlugin() : IPlugin() {
+    SecondPlugin() : IPlugin() {
 
     }
 
-    ~TestPlugin(){
+    ~SecondPlugin(){
     }
 
     const std::string getName() override {
-        return "TestPlugin";
+        return "SecondPlugin";
     }
 
 
@@ -31,7 +31,7 @@ public:
 extern "C" {
 
 std::shared_ptr<IPlugin> create() {
-    return std::make_shared<TestPlugin>(TestPlugin());
+    return std::make_shared<SecondPlugin>(SecondPlugin());
 }
 
 }
