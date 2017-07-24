@@ -22,12 +22,12 @@ set(SOURCE_FILES
         tests/util/Stopwatch.cpp
         tests/benchmarks/LoadAndUnloadBenchmark.h
         tests/benchmarks/EnableAndDisableBenchmark.h
-        )
+        tests/benchmarks/ContextSwitchBenchmark.h tests/benchmarks/ContextSwitchReturnTypeBenchmark.h StringFace.cpp StringFace.h)
 add_executable(Cpp_PluginTest ${SOURCE_FILES})
 
 
-set(first TestPlugin.cpp pluginloading/plugins/IPlugin.cpp)
-set(second SecondPlugin.cpp pluginloading/plugins/IPlugin.cpp)
+set(first TestPlugin.cpp pluginloading/plugins/IPlugin.cpp StringFace.cpp StringFace.h)
+set(second SecondPlugin.cpp pluginloading/plugins/IPlugin.cpp StringFace.cpp StringFace.h)
 
 add_library(FirstPLugin SHARED ${first})
 add_library(SecondPlugin SHARED ${second})

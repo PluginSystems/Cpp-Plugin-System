@@ -6,6 +6,8 @@
 #include "tests/TestCase.h"
 #include "tests/benchmarks/LoadAndUnloadBenchmark.h"
 #include "tests/benchmarks/EnableAndDisableBenchmark.h"
+#include "tests/benchmarks/ContextSwitchBenchmark.h"
+#include "tests/benchmarks/ContextSwitchReturnTypeBenchmark.h"
 
 int main() {
 
@@ -18,9 +20,13 @@ int main() {
 
     benchmarks.push_back(std::make_shared<LoadAndUnloadBenchmark>(LoadAndUnloadBenchmark(loader)));
     benchmarks.push_back(std::make_shared<EnableAndDisableBenchmark>(EnableAndDisableBenchmark(loader)));
+    benchmarks.push_back(std::make_shared<ContextSwitchBenchmark>(ContextSwitchBenchmark(loader)));
+    benchmarks.push_back(std::make_shared<ContextSwitchReturnTypeBenchmark>(ContextSwitchReturnTypeBenchmark(loader)));
 
 
-    unsigned long count = 50000;
+    std::list<unsigned long> rounds = {10, 50, 70, 100, 250};
+
+    for (auto count : rounds) {
 
         for (std::shared_ptr<TestCase> testCase: benchmarks) {
             testCase->setUp();
@@ -30,26 +36,25 @@ int main() {
         }
 
 
+        for (std::shared_ptr<TestCase> finishedBenchmark : benchmarks) {
 
-    for (std::shared_ptr<TestCase> finishedBenchmark : benchmarks) {
+            std::ofstream resultFileStream;
 
-        std::ofstream resultFileStream;
-
-        std::stringstream fileName;
-
-
-        fileName << "results_"<< finishedBenchmark->getName()<<"_nanoseconds_"<< count <<"_" << std::chrono::system_clock::now().time_since_epoch().count() << ".csv";
+            std::stringstream fileName;
 
 
-        resultFileStream.open(fileName.str());
+            fileName << "results_" << finishedBenchmark->getName() << "_nanoseconds_" << count << "_"
+                     << std::chrono::system_clock::now().time_since_epoch().count() << ".csv";
 
-        finishedBenchmark->printStats(resultFileStream);
 
-        resultFileStream.close();
+            resultFileStream.open(fileName.str());
+
+            finishedBenchmark->printStats(resultFileStream);
+
+            resultFileStream.close();
+        }
     }
     benchmarks.clear();
-
-
 
 
     return 0;

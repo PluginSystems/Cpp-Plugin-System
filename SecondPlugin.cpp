@@ -4,8 +4,9 @@
 
 #include <iostream>
 #include "pluginloading/plugins/IPlugin.h"
+#include "StringFace.h"
 
-class SecondPlugin : public virtual IPlugin {
+class SecondPlugin : public virtual IPlugin, public StringFace {
 public:
     SecondPlugin() : IPlugin() {
 
@@ -26,6 +27,15 @@ public:
     void onDisable() override {
         std::cout << "onDisable " << this->getName() << " Be ready to rumble" << std::endl;
     }
+
+    void printMessage(std::string message) override {
+        std::cout << getName() << " saying " << message << std::endl;
+    }
+
+    std::string modifyMessage(std::string message) override {
+        return getName() + " returning "+ message;
+    }
+
 };
 
 extern "C" {

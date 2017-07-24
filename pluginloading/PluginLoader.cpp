@@ -140,3 +140,7 @@ void ysl::PluginLoader::enable() {
         pluginPair.second->onEnable();
     }
 }
+
+std::shared_ptr<IPlugin> ysl::PluginLoader::getPlugin(std::string name) {
+    return pluginFiles[name];
+}
