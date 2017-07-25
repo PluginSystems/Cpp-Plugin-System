@@ -26,7 +26,7 @@ public:
     }
 
     std::string getName() override {
-        return "EnableAndDisableBenchmark";
+        return "ContextSwitchReturnTypeBenchmark";
     }
 
 protected:
