@@ -26,6 +26,8 @@ int main() {
 
     std::list<unsigned long> rounds = {10, 50, 70, 100, 250};
 
+    long time = std::chrono::system_clock::now().time_since_epoch().count();
+
     for (auto count : rounds) {
 
         for (std::shared_ptr<TestCase> testCase: benchmarks) {
@@ -44,7 +46,7 @@ int main() {
 
 
             fileName << "results_" << finishedBenchmark->getName() << "_nanoseconds_" << count << "_"
-                     << std::chrono::system_clock::now().time_since_epoch().count() << ".csv";
+                     << time << ".csv";
 
 
             resultFileStream.open(fileName.str());
