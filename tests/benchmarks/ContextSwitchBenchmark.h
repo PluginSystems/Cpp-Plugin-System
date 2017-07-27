@@ -24,25 +24,25 @@ public:
         loader.unload();
     }
 
-    std::string getName() override {
+    const std::string getName() override {
         return "ContextSwitchBenchmark";
     }
 
 protected:
     void runTest(unsigned long cycle) override {
 
-
-        startTimer();
-
         std::shared_ptr<IPlugin> plugin = loader.getPlugin("TestPlugin");
 
-        if(StringFace * face = dynamic_cast<StringFace*>(plugin.get())){
-            face->printMessage(getName());
-        }
 
-        stopTimer();
-        defineBenchmarkPoint(cycle, getName()+"_"+std::to_string(cycle+1));
-        resetTimer();
+            startTimer();
+
+            if(std::shared_ptr<StringFace> face = std::dynamic_pointer_cast<StringFace>(plugin)){
+                face->test();
+            }
+
+            stopTimer();
+            defineBenchmarkPoint(cycle, getName()+"_"+std::to_string(cycle+1));
+            resetTimer();
     }
 
 };

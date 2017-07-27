@@ -62,7 +62,7 @@ public:
     TestCase(ysl::PluginLoader& pluginLoader): loader(pluginLoader){
     }
 
-    virtual std::string getName()=0;
+    virtual const std::string getName()=0;
 
     virtual void setUp(){}
     virtual void tearDown(){}

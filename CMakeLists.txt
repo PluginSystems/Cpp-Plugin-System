@@ -22,7 +22,7 @@ set(SOURCE_FILES
         tests/util/Stopwatch.cpp
         tests/benchmarks/LoadAndUnloadBenchmark.h
         tests/benchmarks/EnableAndDisableBenchmark.h
-        tests/benchmarks/ContextSwitchBenchmark.h tests/benchmarks/ContextSwitchReturnTypeBenchmark.h StringFace.cpp StringFace.h)
+        tests/benchmarks/ContextSwitchBenchmark.h StringFace.cpp StringFace.h)
 add_executable(Cpp_PluginTest ${SOURCE_FILES})
 
 

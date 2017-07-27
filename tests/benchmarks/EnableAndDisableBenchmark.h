@@ -26,7 +26,7 @@ public:
         loader.unload();
     }
 
-    std::string getName() override {
+    const std::string getName() override {
         return "EnableAndDisableBenchmark";
     }
 
@@ -34,15 +34,15 @@ protected:
     void runTest(unsigned long cycle) override {
 
 
-        startTimer();
+            startTimer();
 
-        loader.enable();
+            loader.enable();
 
-        loader.disable();
+            loader.disable();
 
-        stopTimer();
-        defineBenchmarkPoint(cycle, getName()+"_"+std::to_string(cycle+1));
-        resetTimer();
+            stopTimer();
+            defineBenchmarkPoint(cycle, getName()+"_"+std::to_string(cycle+1));
+            resetTimer();
     }
 
 

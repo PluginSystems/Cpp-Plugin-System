@@ -10,6 +10,7 @@
 
 class IPlugin {
 
+
 public:
 
     virtual ~IPlugin();

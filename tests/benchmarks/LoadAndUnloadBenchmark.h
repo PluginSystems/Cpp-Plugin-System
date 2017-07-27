@@ -14,7 +14,7 @@ public:
     LoadAndUnloadBenchmark(ysl::PluginLoader&pluginLoader) : TestCase(pluginLoader) {}
 
 
-    std::string getName() override {
+    const std::string getName() override {
         return "LoadAndUnloadBenchmark";
     }
 
@@ -22,14 +22,15 @@ protected:
     void runTest(unsigned long cycle) override {
 
 
-        startTimer();
-        loader.load();
+            startTimer();
+            loader.load();
 
-        loader.unload();
-        stopTimer();
+            loader.unload();
+            stopTimer();
 
-        defineBenchmarkPoint(cycle,getName()+"_"+std::to_string(cycle+1));
-        resetTimer();
+            defineBenchmarkPoint(cycle,getName()+"_"+std::to_string(cycle+1));
+            resetTimer();
+
     }
 
 

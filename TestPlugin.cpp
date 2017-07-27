@@ -6,7 +6,7 @@
 #include "pluginloading/plugins/IPlugin.h"
 #include "StringFace.h"
 
-class TestPlugin : public virtual IPlugin, public StringFace {
+class TestPlugin : public virtual IPlugin {
 public:
     TestPlugin() : IPlugin() {
 
@@ -21,19 +21,9 @@ public:
 
 
     void onEnable() override {
-        std::cout << "onEnable " << this->getName() << " Be ready to rumble"<< std::endl;
     }
 
     void onDisable() override {
-        std::cout << "onDisable " << this->getName() << " Be ready to rumble" << std::endl;
-    }
-
-    void printMessage(std::string message) override {
-        std::cout << getName() << " saying " << message << std::endl;
-    }
-
-    std::string modifyMessage(std::string message) override {
-        return getName() + " returning "+ message;
     }
 
 };

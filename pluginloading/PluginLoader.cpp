@@ -33,7 +33,7 @@ void ysl::PluginLoader::load() {
     this->pluginHandles = std::unordered_map<std::string, std::shared_ptr<PluginHandle>>();
     FileReader reader;
     std::vector<std::string> files = reader.readDir(filePath, fileEndings);
-    std::cout << "Files available: " << files.size() << std::endl;
+    //std::cout << "Files available: " << files.size() << std::endl;
     for (const std::string &name : files) {
         this->load(name);
     }
@@ -69,7 +69,7 @@ void ysl::PluginLoader::load(const std::string &pluginFileName) {
     handle->handle = dlopen(pluginFileName.c_str(), RTLD_LAZY);
 
     if (!handle->handle) {
-        std::cerr << "Cannot load library: " << dlerror() << '\n';
+        //std::cerr << "Cannot load library: " << dlerror() << '\n';
         return;
     }
 
@@ -80,7 +80,7 @@ void ysl::PluginLoader::load(const std::string &pluginFileName) {
     handle->create = (create_t *) dlsym(handle->handle, "create");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
-        std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
+        //std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
         return;
     }
 
